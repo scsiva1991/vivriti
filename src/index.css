@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.logo {
+  margin-top: -25px;  
+}
+
+.navbar-brand {
+  max-width: 200px;
+}
+
+.navbar-default {
+  padding: 10px 0;
+}
+
+.custom-input {
+  padding: 20px !important;
+  min-width: 300px;
+}
+
+.custom-btn {
+  width: 100px;
+  padding: 10px !important;
+}
+
+.d-flex {
+  display: inline-flex;
+}
+
+.fa {
+  margin-right: 5px;
+}
+
+.border-line {
+  border: 1px solid silver;
+}
+
+.mg-t-20 {
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+}
