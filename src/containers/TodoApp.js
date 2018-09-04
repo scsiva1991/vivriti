@@ -12,6 +12,16 @@ export default class TodoApp extends Component {
     }
   }
 
+  componentDidMount = () => {
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+    console.log('***', items);
+    if (items) {
+      this.setState({
+        items
+      })
+    }
+  }
+
   handleChange = e => {
     this.setState({
       newItem: e.target.value
@@ -23,11 +33,53 @@ export default class TodoApp extends Component {
     if (!newItem) {
       return;
     }
+    const currentItems = [...items, {id: new Date().valueOf(), name: newItem, isCompleted: false}]
     this.setState({
-      items: [...items, {id: items.length, name: newItem}],
+      items: currentItems,
       newItem: ''
     });
+    this.saveToStorage(currentItems);
+  }
 
+  handleEdit = (id, name) => {
+    const { items } = this.state;
+    const updatedItems = items.map(item => {
+      if (item.id !== id) {
+        return item;
+      }
+      return {...item, name}
+    });
+    this.setState({
+      items: [...updatedItems]
+    });
+    this.saveToStorage(updatedItems);
+  }
+
+  handleDelete = id => {
+    const { items } = this.state;
+    const filteredItems = items.filter(item => item.id !== id);
+    this.setState({
+      items: [...filteredItems]
+    });
+    this.saveToStorage(filteredItems);
+  }
+
+  moveToCompleted = (id, status) => {
+    const { items } = this.state;
+    const updatedItems = items.map(item => {
+      if (item.id !== id) {
+        return item;
+      }
+      return {...item, isCompleted: status}
+    });
+    this.setState({
+      items: [...updatedItems]
+    });
+    this.saveToStorage(updatedItems);
+  }
+
+  saveToStorage = items => {
+    localStorage.setItem('items', JSON.stringify(items));
   }
 
   render() {
@@ -48,7 +100,7 @@ export default class TodoApp extends Component {
                   value={newItem}
                 />
               </FormGroup>{' '}
-              <Button bsStyle="primary custom-btn mg-t-20" onClick={this.addItem}>
+              <Button bsStyle="primary" className="custom-btn mg-t-20" onClick={this.addItem}>
                 <i className="fa fa-plus" aria-hidden="true"></i>
                 Add
               </Button>
@@ -56,16 +108,57 @@ export default class TodoApp extends Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={6} className="text-center mg-t-20">
-            <h2> TODO ITEMS </h2>
+          <Col xs={6} className="mg-t-20">
+            <h2 className="text-center"> TODO ITEMS </h2>
             <hr className="border-line"/>
-            <ul className="mg-t-20">
-              <TodoItem items={items} />
+            <ul className="mg-t-20">              
+              {/* {
+                items.length === 0 &&
+                <h4> No Items Found </h4>
+              } */}
+              {
+                items.map(item => {
+                  if (item.isCompleted) {
+                    return '';
+                  }
+                  return (
+                    <TodoItem 
+                      key={item.id}
+                      item={item}
+                      handleEdit={this.handleEdit}
+                      handleDelete={this.handleDelete}
+                      moveToCompleted={this.moveToCompleted}
+                      isCompleted={false}
+                    />
+                  )
+                })
+                
+              }              
             </ul>
           </Col>
-          <Col xs={6} className="text-center mg-t-20">
-            <h2> COMPLETED ITEMS </h2>
+          <Col xs={6} className="mg-t-20">
+            <h2 className="text-center"> COMPLETED ITEMS </h2>
             <hr className="border-line"/>
+            <ul className="mg-t-20"> 
+              {
+                items.map(item => {
+                  if (!item.isCompleted) {
+                    return '';
+                  }
+                  return (
+                    <TodoItem 
+                      key={item.id}
+                      item={item}
+                      handleEdit={this.handleEdit}
+                      handleDelete={this.handleDelete}
+                      moveToCompleted={this.moveToCompleted}
+                      isCompleted={true}
+                    />
+                  )
+                })
+                
+              }              
+            </ul>
           </Col>
         </Row>
       </Grid>
