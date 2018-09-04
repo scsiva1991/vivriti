@@ -25,8 +25,6 @@ export default class TodoItem extends Component {
     if (!selectedItem || selectedItem === item.name) {
       return;
     }
-
-    console.log('***', item.id, selectedItem);
     this.props.handleEdit(item.id, selectedItem);
   }
 

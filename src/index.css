@@ -50,6 +50,39 @@ ul {
   text-decoration: line-through;
 }
 
+.glyphicon-search {
+  left: 0;
+}
+
+.searchbar {
+  width: 500px !important;
+}
+
+.delete-icon {
+  position: relative;
+  right: 20px !important;
+  top: 1px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.book-item {
+  margin: 10px;
+  padding: 20px;
+  /* border: 1px solid #333; */
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.fa-star {
+  color: #FD4;
+}
+
+.active-page {
+  background-color: #4574ff;
+  color: #fff;
+  font-weight: bold;
+}
+
 
 /* Utill  css classes starts here */
 

@@ -14,7 +14,6 @@ export default class TodoApp extends Component {
 
   componentDidMount = () => {
     const items = JSON.parse(localStorage.getItem('items')) || [];
-    console.log('***', items);
     if (items) {
       this.setState({
         items
@@ -90,7 +89,7 @@ export default class TodoApp extends Component {
           <Col xs={12} className="text-center">
             <h2> ADD ITEM </h2>
             <hr className="border-line"/>
-            <Form inline >
+            <Form inline onSubmit={this.addItem}>
               <FormGroup controlId="formInlineName" className="mg-t-20">
                 <FormControl
                   type="text"

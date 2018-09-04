@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem} from 'react-bootstrap';
+import { BrowserRouter as Router, Route, Link, withRouter } from "react-router-dom";
 import logo from '../logo.png';
+class Header extends Component {
 
-export default class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: 1
+    }
+  }
+
+  navigateTo = path => {
+    this.props.history.push(path);
+    this.setState({
+      activeKey: path === '/' ? 1 : 2
+    })
+  }
+  
   render() {
+    const { activeKey } = this.state;
     return(
       <Navbar fluid>
         <Navbar.Header>
@@ -15,11 +31,11 @@ export default class Header extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav pullRight activeKey={1} >
-            <NavItem eventKey={1} href="#">
+          <Nav pullRight activeKey={activeKey} >
+            <NavItem eventKey={1} onClick={()=>this.navigateTo('/')} >
               Todo App
             </NavItem>
-            <NavItem eventKey={2} href="#">
+            <NavItem eventKey={2} onClick={()=>this.navigateTo('/good-read')}>              
               Good Read App
             </NavItem>
           </Nav>
@@ -28,3 +44,5 @@ export default class Header extends Component {
     )
   }
 }
+
+export default withRouter(Header);
