@@ -19,7 +19,7 @@ Application hosted on [https://vivriti-6b67e.firebaseapp.com/](https://vivriti-6
 
 ### Screenshots
 
-<img src="https://github.com/scsiva1991/vivriti/blob/master/screenshot/Todo.png" />
+<img src="https://github.com/scsiva1991/vivriti/blob/master/src/screenshots/Todo.png" />
 
-<img src="https://github.com/scsiva1991/vivriti/blob/master/screenshot/GoodRead.png" />
+<img src="https://github.com/scsiva1991/vivriti/blob/master/src/screenshots/GoodRead.png" />
 
