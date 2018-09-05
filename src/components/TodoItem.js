@@ -85,7 +85,7 @@ export default class TodoItem extends Component {
       <li key={item.id} className="mg-t-20">
         <Form inline >
           <Checkbox className="custom-check" checked onChange={(e)=>this.markCompleted(item.id, e)}/>
-          <ControlLabel className="m-l-5 w-200 completed-item f-20 capitalize">{item.name}</ControlLabel>
+          <ControlLabel className="m-l-5 completed-item f-20 capitalize">{item.name}</ControlLabel>
         </Form>
       </li>
     );

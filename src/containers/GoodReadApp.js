@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Button, Form, FormGroup, FormControl } from 'react-bootstrap';
+import { Grid, Row, Col, Alert } from 'react-bootstrap';
+import axios from 'axios';
+import { URL } from '../constants';
 import { SearchBar } from '../components/SearchBar';
 import { Book } from '../components/Book';
 import { Pagination } from '../components/Pagination';
-import { API } from '../api';
+
 
 export default class GoodReadApp extends Component {
 
@@ -14,19 +16,9 @@ export default class GoodReadApp extends Component {
       searchTerm: '',
       totalBooks: 0,
       currentPage: 1,
-      maxPage: 1
+      showAlert: false
     }
   }
-
-//   componentDidMount = () => {
-//     const proxyurl = "https://cors-anywhere.herokuapp.com/";
-// const url = "https://www.goodreads.com/author/list/18541?format=xml&key=RoUsc2ix8ecPjulYJvPeg"; //
-//     API.get(proxyurl+url).then(res => {
-//       let responseDoc = new DOMParser().parseFromString(res.data, 'application/xml');
-//       console.log(responseDoc);
-//       console.log(responseDoc.getElementsByTagName('books'));
-//     })
-//   }
 
   handleChange = e => {
     this.setState({
@@ -34,10 +26,14 @@ export default class GoodReadApp extends Component {
     });
   }
 
+  // To clear the search input
   clearSearch = () => {
     this.setState({
       searchTerm: '',
-      books: []
+      books: [],
+      totalBooks: 0,
+      currentPage: 1,
+      showAlert: false
     });
   }
 
@@ -65,19 +61,26 @@ export default class GoodReadApp extends Component {
     this.setState({ currentPage: lastPage }, () => this.searchBook());
   }
 
-  searchBook = () => {
+  /**
+   * Search books from good read API and if books are found
+   * parse the xml and update to component state
+   * 
+   */
+  searchBook = e => {
+    if (e) {
+      e.preventDefault();
+    }
     const { searchTerm, currentPage } = this.state;
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const url = 'https://www.goodreads.com/search/index.xml?key=RoUsc2ix8ecPjulYJvPeg';
-    const bookUrl = `${proxyurl}${url}&q=${searchTerm}&page=${currentPage}`;
-    API.get(bookUrl).then(res => {
+    const bookUrl = `${URL}&q=${searchTerm}&page=${currentPage}`;
+
+    axios.get(bookUrl).then(res => {
       let responseDoc = new DOMParser().parseFromString(res.data, 'application/xml');
       const books = [];
       const start = responseDoc.getElementsByTagName('results-start')[0].textContent;
       const end = responseDoc.getElementsByTagName('results-end')[0].textContent;
       const totalBooks = responseDoc.getElementsByTagName('total-results')[0].textContent;
-
-      for(let i = 0; i<end-start; i++) {
+      const limit = end - start || 1;
+      for(let i = 0; i<limit; i++) {
         let book = {};
         book.id = responseDoc.getElementsByTagName('work')[i].children[0].textContent;
         book.publishedYear = responseDoc.getElementsByTagName('work')[i].children[4].textContent;
@@ -87,16 +90,16 @@ export default class GoodReadApp extends Component {
         book.imageUrl = responseDoc.getElementsByTagName('work')[i].children[8].children[3].textContent;
         books.push(book);
       }
-      console.log('>> books >>', books);
       this.setState({
         books,
-        totalBooks
+        totalBooks,
+        showAlert: books.length > 0 ? false : true
       })
     });
   }
 
   render() {
-    const { searchTerm, books, totalBooks, currentPage } = this.state;
+    const { searchTerm, books, totalBooks, currentPage, showAlert } = this.state;
     return (
       <Grid>
         <Row>
@@ -111,12 +114,30 @@ export default class GoodReadApp extends Component {
         </Row>
         <Row className="mg-t-20">
           {
-            totalBooks > 20 &&
-            <Pagination
-              totalBooks={totalBooks}
-              currentPage={currentPage}
-            />
-          }
+            showAlert &&
+            <Alert bsStyle="danger" className="text-center">
+              <strong>Sorry, No Books Found</strong>
+            </Alert>
+          }          
+          <Col xs={6}>
+            {
+              totalBooks > 0 &&
+              <h4 className="total-books"> {totalBooks} books found </h4>
+            }
+          </Col>
+          <Col xs={6}>
+            {
+              totalBooks > 20 &&
+              <Pagination
+                totalBooks={totalBooks}
+                currentPage={currentPage}
+                nextPage={this.nextPage}
+                prevPage={this.prevPage}
+                redirectToFirstPage={this.redirectToFirstPage}
+                redirectToLastPage={this.redirectToLastPage}
+              />
+            }
+          </Col>
           {
             books.map(book => {              
               return (

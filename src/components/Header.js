@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem} from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import logo from '../logo.png';
 class Header extends Component {
 

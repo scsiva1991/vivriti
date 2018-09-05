@@ -27,7 +27,10 @@ export default class TodoApp extends Component {
     });
   }
 
-  addItem = () => {
+  addItem = e => {
+    if (e) {
+      e.preventDefault();
+    }
     const { newItem, items } = this.state;
     if (!newItem) {
       return;
@@ -89,7 +92,7 @@ export default class TodoApp extends Component {
           <Col xs={12} className="text-center">
             <h2> ADD ITEM </h2>
             <hr className="border-line"/>
-            <Form inline onSubmit={this.addItem}>
+            <Form inline onSubmit={(e) => this.addItem(e)}>
               <FormGroup controlId="formInlineName" className="mg-t-20">
                 <FormControl
                   type="text"
@@ -99,7 +102,7 @@ export default class TodoApp extends Component {
                   value={newItem}
                 />
               </FormGroup>{' '}
-              <Button bsStyle="primary" className="custom-btn mg-t-20" onClick={this.addItem}>
+              <Button bsStyle="primary" className="custom-btn mg-t-20" onClick={(e) => this.addItem(e)}>
                 <i className="fa fa-plus" aria-hidden="true"></i>
                 Add
               </Button>
